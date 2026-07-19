@@ -9,6 +9,7 @@ namespace AfterHours.Gameplay.Player
         private const string MoveActionName = "Move";
         private const string LookActionName = "Look";
         private const string JumpActionName = "Jump";
+        private const string InteractActionName = "Interact";
 
         [SerializeField] private InputActionAsset _inputActions;
 
@@ -16,17 +17,25 @@ namespace AfterHours.Gameplay.Player
         private InputAction _moveAction;
         private InputAction _lookAction;
         private InputAction _jumpAction;
+        private InputAction _interactAction;
         private bool _jumpPressed;
+        private bool _interactPressed;
 
         public Vector2 MoveInput { get; private set; }
         public Vector2 LookInput { get; private set; }
 
         private void Awake()
         {
+            if (_inputActions == null)
+            {
+                return;
+            }
+
             _playerMap = _inputActions.FindActionMap(PlayerMapName, true);
             _moveAction = _playerMap.FindAction(MoveActionName, true);
             _lookAction = _playerMap.FindAction(LookActionName, true);
             _jumpAction = _playerMap.FindAction(JumpActionName, true);
+            _interactAction = _playerMap.FindAction(InteractActionName, true);
         }
 
         private void OnEnable()
@@ -41,6 +50,7 @@ namespace AfterHours.Gameplay.Player
             _lookAction.performed += OnLook;
             _lookAction.canceled += OnLook;
             _jumpAction.performed += OnJump;
+            _interactAction.performed += OnInteract;
             _playerMap.Enable();
         }
 
@@ -56,10 +66,12 @@ namespace AfterHours.Gameplay.Player
             _lookAction.performed -= OnLook;
             _lookAction.canceled -= OnLook;
             _jumpAction.performed -= OnJump;
+            _interactAction.performed -= OnInteract;
             _playerMap.Disable();
             MoveInput = Vector2.zero;
             LookInput = Vector2.zero;
             _jumpPressed = false;
+            _interactPressed = false;
         }
 
         public bool ConsumeJumpPressed()
@@ -67,6 +79,13 @@ namespace AfterHours.Gameplay.Player
             bool jumpPressed = _jumpPressed;
             _jumpPressed = false;
             return jumpPressed;
+        }
+
+        public bool ConsumeInteractPressed()
+        {
+            bool interactPressed = _interactPressed;
+            _interactPressed = false;
+            return interactPressed;
         }
 
         private void OnMove(InputAction.CallbackContext context)
@@ -82,6 +101,11 @@ namespace AfterHours.Gameplay.Player
         private void OnJump(InputAction.CallbackContext context)
         {
             _jumpPressed = true;
+        }
+
+        private void OnInteract(InputAction.CallbackContext context)
+        {
+            _interactPressed = true;
         }
     }
 }
