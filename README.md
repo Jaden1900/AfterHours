@@ -12,7 +12,7 @@ AfterHours is a production-oriented, AI-powered investigation game built with Un
 ## Getting started
 
 1. Open the repository in Unity Hub with Unity `6000.5.4f1` (Unity 6).
-2. Open `Assets/Scenes/00_Bootstrap.unity`.
+2. Open `Assets/AfterHours/Scenes/00_Bootstrap.unity`.
 3. Use the Unity Console to confirm the project imports without errors before beginning a feature.
 
 The current revision establishes the project foundation only. It intentionally contains no gameplay systems.
