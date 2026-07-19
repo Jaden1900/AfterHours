@@ -2,7 +2,7 @@
 
 ## Foundation
 
-AfterHours is a Unity 6 Universal Render Pipeline (URP) project written in C#. The project currently contains a directory and scene foundation only; it deliberately contains no gameplay systems or custom assembly definitions.
+AfterHours is a Unity 6 Universal Render Pipeline (URP) project written in C#. The project contains focused player, interaction, NPC, and basic dialogue systems without custom assembly definitions.
 
 ## Asset layout
 
@@ -12,7 +12,7 @@ All new game-owned assets belong in `Assets/AfterHours`:
 - `Scripts` holds runtime and editor C# source.
 - `Tests` holds Unity Test Framework tests once behavior exists to test.
 
-`Scripts` is organized by feature and responsibility. `Core` contains shared, dependency-light building blocks; feature folders (such as `NPCs`, `Quests`, and `AI`) own their domain code. Editor-only scripts belong in `Scripts/Editor`.
+`Scripts` is organized by feature and responsibility. `Core` contains shared, dependency-light building blocks; feature folders (such as `NPCs`, `Dialogue`, `Quests`, and `AI`) own their domain code. Editor-only scripts belong in `Scripts/Editor`.
 
 ## Dependencies
 
@@ -31,3 +31,8 @@ The source-controlled scene set is intentionally minimal:
 - `92_QuestTest`: isolated quest-flow testing.
 
 These are placeholder scenes only. They must not become the playable district.
+
+
+## NPC and dialogue boundary
+
+`Gameplay/NPCs/NPCData` holds authored NPC identity and one initial dialogue line without scene dependencies. `NPCInteractable` implements the shared interaction contract and receives its `NPCData` and `DialogueController` through explicit serialized references. `Gameplay/Dialogue/DialogueController` owns active dialogue state and emits events, while `UI/DialoguePresenter` is the concrete TMP/button presentation layer. `DialogueCancelInputHandler` bridges the existing input reader's consumed Cancel action to the controller. This keeps dialogue state independent from UI and leaves a clear extension point for scripted lines, branching, quests, and AI conversations.
