@@ -5,9 +5,9 @@
 - Establish the canonical asset, script, test, documentation, and scene layout.
 - Keep the project free of custom gameplay code and premature assembly definitions.
 
-## 1. Core contracts
+## 1. Player movement and camera — active milestone
 
-Define stable IDs, state boundaries, and event conventions in `Scripts/Core`. Add focused tests for each contract before feature consumers are introduced.
+Build and validate the focused third-person movement foundation in `90_Sandbox`: camera-relative movement, mouse look, grounded jumping, gravity, and cursor handling. Keep it limited to placeholder primitives and focused player components.
 
 ## 2. Investigation vertical slice
 
