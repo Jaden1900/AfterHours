@@ -28,3 +28,30 @@ Implement a narrow, validated AI service boundary with DTOs, prompts, and determ
 ## 6. Persistence and polish
 
 Add versioned save data, recovery tests, accessibility review, performance profiling, and production content workflows.
+
+## Milestone 3: NPC and Basic Dialogue Framework — complete
+
+### Scripts
+
+- `NPCData` is an authored ScriptableObject containing an NPC ID, display name, optional interaction prompt, and one initial dialogue line.
+- `NPCInteractable` implements the existing `IInteractable` contract and delegates dialogue opening to an explicitly assigned `DialogueController`.
+- `DialogueController` owns the active speaker/text state and publishes open/close events without depending on a UI implementation.
+- `DialoguePresenter` renders controller events through assigned TextMesh Pro text and a close button.
+- `DialogueCancelInputHandler` consumes the existing UI Cancel action from `PlayerInputReader` while dialogue is open.
+
+### Manual Unity setup
+
+1. Create an NPC data asset with **Assets > Create > AfterHours > NPC Data**. Set **NPC Id**, **Display Name**, and **Initial Dialogue Text**. Leave **Interaction Prompt** empty to use `Talk to <Display Name>`.
+2. Add `DialogueController` to a dedicated gameplay GameObject.
+3. Create a Canvas and dialogue-panel child manually. Add TMP text fields for speaker name and dialogue body, plus a UI Button for close.
+4. Add `DialoguePresenter` to an active UI GameObject (not the panel if the panel is disabled). Assign the controller, panel root, TMP fields, and close button.
+5. Add `DialogueCancelInputHandler` to a gameplay GameObject. Assign the same dialogue controller and the player's `PlayerInputReader`. The existing UI `Cancel` binding (Escape / the appropriate device cancel control) closes active dialogue.
+6. Add `NPCInteractable` and a Collider to each NPC GameObject. Assign the NPC data asset and the same dialogue controller. Ensure its layer is included by `PlayerInteractionController`.
+
+### Current limitations and future extensions
+
+- Each NPC currently opens one authored dialogue line only; there is no dialogue progression or branching.
+- There is no AI dialogue integration, NPC animation, quest linkage, or scripted conversation sequencing yet.
+- Player movement and camera input remain active during dialogue. A future refinement can add a focused input-lock policy without changing dialogue state ownership.
+- Prompt text does not yet show a dynamic input-binding label.
+- The controller state and events are deliberately UI-independent so later dialogue graphs, branching, quests, and AI conversation providers can build on the same boundary.
