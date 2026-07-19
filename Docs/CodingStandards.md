@@ -15,6 +15,7 @@
 - Keep provider-specific AI implementation details inside `Scripts/AI`.
 - Put editor-only code in `Scripts/Editor`; do not reference `UnityEditor` from runtime code.
 - Prefer explicit IDs and data assets over scene-name strings and hidden object lookups.
+- Author and save Unity scenes through the Unity Editor under normal circumstances. Codex must avoid directly constructing scene YAML unless it is explicitly requested and validated.
 
 ## Quality
 
