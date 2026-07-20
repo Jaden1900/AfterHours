@@ -55,3 +55,27 @@ Add versioned save data, recovery tests, accessibility review, performance profi
 - Player movement and camera input remain active during dialogue. A future refinement can add a focused input-lock policy without changing dialogue state ownership.
 - Prompt text does not yet show a dynamic input-binding label.
 - The controller state and events are deliberately UI-independent so later dialogue graphs, branching, quests, and AI conversation providers can build on the same boundary.
+
+## Milestone 4: Investigation State & Evidence System — complete
+
+### Architecture
+
+- `InvestigationState` is an explicitly assigned runtime component that owns collected evidence IDs and story flags. It uses duplicate-safe sets and publishes `EvidenceCollected` and `FlagChanged` events; it has no singleton, object lookup, persistence, or UI dependency.
+- `EvidenceData` is an authored ScriptableObject with an evidence ID, display name, description, and optional icon.
+- `EvidenceInteractable` implements `IInteractable`, receives an `EvidenceData` asset and an `InvestigationState` through serialized references, and becomes unavailable after successful collection.
+- `DialogueConditionEvaluator` is a small reusable adapter over `InvestigationState` for future dialogue branches. It evaluates evidence and flags without knowing NPC identities or authored IDs.
+- `EvidenceNotificationPresenter` listens to the state event and resolves IDs through an explicitly assigned evidence catalog before displaying the evidence-found panel. Presentation does not own progress or alter collection rules.
+
+### Manual Unity setup
+
+1. Add `InvestigationState` to one active runtime GameObject, such as a gameplay systems object.
+2. Create evidence assets through **Assets > Create > AfterHours > Investigation > Evidence Data**. Give every asset a unique, non-empty **Evidence Id**.
+3. Add a Collider and `EvidenceInteractable` to each physical evidence GameObject. Assign its `EvidenceData` and the shared `InvestigationState`; ensure the collider layer is included by `PlayerInteractionController`.
+4. For the optional notification, create the panel and three TMP text fields manually. Add `EvidenceNotificationPresenter` to an active UI GameObject, then assign the shared state, panel, heading, display-name, and description fields. Populate **Evidence Catalog** with each evidence asset that can notify.
+5. When choosing dialogue content at an NPC, construct `DialogueConditionEvaluator` with that same `InvestigationState` and call `HasEvidence("your_evidence_id")` or `HasFlag("your_flag")` before opening the appropriate existing dialogue pages.
+
+### Current limitations and future extensions
+
+- There is intentionally no inventory, objective, journal, quest, or save UI in this milestone.
+- The evidence catalog is only a presentation lookup; the runtime state remains the authority for progress.
+- Future objectives, inventory, persistence, AI conversations, and quests can subscribe to the same state events or query the existing public APIs without changing interaction or dialogue ownership.
