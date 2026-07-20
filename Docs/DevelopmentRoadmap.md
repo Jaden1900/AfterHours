@@ -79,3 +79,12 @@ Add versioned save data, recovery tests, accessibility review, performance profi
 - There is intentionally no inventory, objective, journal, quest, or save UI in this milestone.
 - The evidence catalog is only a presentation lookup; the runtime state remains the authority for progress.
 - Future objectives, inventory, persistence, AI conversations, and quests can subscribe to the same state events or query the existing public APIs without changing interaction or dialogue ownership.
+
+## Milestone 4.5: Simple Door Interaction — complete
+
+### Manual Unity setup
+
+1. Add `DoorInteractable` and a Collider to the door GameObject. Keep the collider on a layer included by `PlayerInteractionController` so the player can target it.
+2. Set **Prompt** to the desired closed-door instruction. Assign **Closed Door Visual** to the object that represents the closed door.
+3. Optionally assign **Open Door Visual** for a separate open-door object, and **Blocking Collider** for the collider that should stop blocking the doorway once opened.
+4. Enable **Starts Open** when the door should load already open. Otherwise, interacting once hides the closed visual, shows the optional open visual, disables the optional blocker, and makes the door unavailable for further interaction.

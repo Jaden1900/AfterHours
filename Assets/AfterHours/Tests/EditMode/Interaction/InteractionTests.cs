@@ -38,6 +38,95 @@ namespace AfterHours.Tests.EditMode.Interaction
         }
 
         [Test]
+        public void DoorInteractable_StartsClosed()
+        {
+            GameObject doorObject = new GameObject();
+            DoorInteractable door = doorObject.AddComponent<DoorInteractable>();
+
+            Assert.That(door.IsOpen, Is.False);
+            Assert.That(door.CanInteract, Is.True);
+            Assert.That(door.Prompt, Is.EqualTo("Open Door"));
+
+            Object.DestroyImmediate(doorObject);
+        }
+
+        [Test]
+        public void DoorInteractable_InteractionOpensDoorAndAppliesAssignedState()
+        {
+            GameObject doorObject = new GameObject();
+            DoorInteractable door = doorObject.AddComponent<DoorInteractable>();
+            GameObject closedVisual = new GameObject();
+            GameObject openVisual = new GameObject();
+            GameObject blockerObject = new GameObject();
+            BoxCollider blockingCollider = blockerObject.AddComponent<BoxCollider>();
+
+            SetPrivateField(door, "_closedDoorVisual", closedVisual);
+            SetPrivateField(door, "_openDoorVisual", openVisual);
+            SetPrivateField(door, "_blockingCollider", blockingCollider);
+            InvokePrivateMethod(door, "Awake");
+
+            door.Interact(null);
+
+            Assert.That(door.IsOpen, Is.True);
+            Assert.That(door.CanInteract, Is.False);
+            Assert.That(door.Prompt, Is.Null);
+            Assert.That(closedVisual.activeSelf, Is.False);
+            Assert.That(openVisual.activeSelf, Is.True);
+            Assert.That(blockingCollider.enabled, Is.False);
+
+            Object.DestroyImmediate(doorObject);
+            Object.DestroyImmediate(closedVisual);
+            Object.DestroyImmediate(openVisual);
+            Object.DestroyImmediate(blockerObject);
+        }
+
+        [Test]
+        public void DoorInteractable_DuplicateInteractionFiresDoorOpenedOnlyOnce()
+        {
+            GameObject doorObject = new GameObject();
+            DoorInteractable door = doorObject.AddComponent<DoorInteractable>();
+            int openedCount = 0;
+            door.DoorOpened += () => openedCount++;
+
+            door.Interact(null);
+            door.Interact(null);
+
+            Assert.That(openedCount, Is.EqualTo(1));
+
+            Object.DestroyImmediate(doorObject);
+        }
+
+        [Test]
+        public void DoorInteractable_StartsOpenAppliesInitialState()
+        {
+            GameObject doorObject = new GameObject();
+            DoorInteractable door = doorObject.AddComponent<DoorInteractable>();
+            GameObject closedVisual = new GameObject();
+            GameObject openVisual = new GameObject();
+            openVisual.SetActive(false);
+            GameObject blockerObject = new GameObject();
+            BoxCollider blockingCollider = blockerObject.AddComponent<BoxCollider>();
+
+            SetPrivateField(door, "_closedDoorVisual", closedVisual);
+            SetPrivateField(door, "_openDoorVisual", openVisual);
+            SetPrivateField(door, "_blockingCollider", blockingCollider);
+            SetPrivateField(door, "_startsOpen", true);
+            InvokePrivateMethod(door, "Awake");
+
+            Assert.That(door.IsOpen, Is.True);
+            Assert.That(door.CanInteract, Is.False);
+            Assert.That(door.Prompt, Is.Null);
+            Assert.That(closedVisual.activeSelf, Is.False);
+            Assert.That(openVisual.activeSelf, Is.True);
+            Assert.That(blockingCollider.enabled, Is.False);
+
+            Object.DestroyImmediate(doorObject);
+            Object.DestroyImmediate(closedVisual);
+            Object.DestroyImmediate(openVisual);
+            Object.DestroyImmediate(blockerObject);
+        }
+
+        [Test]
         public void CurrentTarget_ClearsWhenInteractableBecomesUnavailable()
         {
             GameObject controllerObject = new GameObject();
