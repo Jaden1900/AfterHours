@@ -11,11 +11,12 @@ namespace AfterHours.UI
         [SerializeField] private GameObject _dialoguePanel;
         [SerializeField] private TMP_Text _speakerNameText;
         [SerializeField] private TMP_Text _dialogueBodyText;
+        [SerializeField] private Button _continueButton;
         [SerializeField] private Button _closeButton;
 
         private void Awake()
         {
-            RefreshPresentation();
+            HideDialogue();
         }
 
         private void OnEnable()
@@ -23,12 +24,18 @@ namespace AfterHours.UI
             if (_dialogueController != null)
             {
                 _dialogueController.DialogueOpened += ShowDialogue;
+                _dialogueController.DialoguePageChanged += ShowPage;
                 _dialogueController.DialogueClosed += HideDialogue;
             }
 
             if (_closeButton != null)
             {
                 _closeButton.onClick.AddListener(CloseDialogue);
+            }
+
+            if (_continueButton != null)
+            {
+                _continueButton.onClick.AddListener(ContinueDialogue);
             }
 
             RefreshPresentation();
@@ -39,12 +46,18 @@ namespace AfterHours.UI
             if (_dialogueController != null)
             {
                 _dialogueController.DialogueOpened -= ShowDialogue;
+                _dialogueController.DialoguePageChanged -= ShowPage;
                 _dialogueController.DialogueClosed -= HideDialogue;
             }
 
             if (_closeButton != null)
             {
                 _closeButton.onClick.RemoveListener(CloseDialogue);
+            }
+
+            if (_continueButton != null)
+            {
+                _continueButton.onClick.RemoveListener(ContinueDialogue);
             }
         }
 
@@ -59,9 +72,25 @@ namespace AfterHours.UI
             SetPanelActive(false);
         }
 
+        private void ShowPage(string dialogueText)
+        {
+            if (_dialogueController == null)
+            {
+                return;
+            }
+
+            SetText(_dialogueController.CurrentSpeakerName, dialogueText);
+            SetPanelActive(true);
+        }
+
         private void CloseDialogue()
         {
             _dialogueController?.CloseDialogue();
+        }
+
+        private void ContinueDialogue()
+        {
+            _dialogueController?.Next();
         }
 
         private void RefreshPresentation()

@@ -65,5 +65,32 @@ namespace AfterHours.Tests.EditMode.Dialogue
 
             Object.DestroyImmediate(gameObject);
         }
+
+        [Test]
+        public void Next_AdvancesPagesThenClosesDialogueOnLastPage()
+        {
+            GameObject gameObject = new GameObject();
+            DialogueController controller = gameObject.AddComponent<DialogueController>();
+            int pageChangeCount = 0;
+            controller.DialoguePageChanged += _ => pageChangeCount++;
+
+            Assert.That(controller.TryOpenDialogue("Alex", new[] { "First.", "Second." }), Is.True);
+            Assert.That(controller.PageCount, Is.EqualTo(2));
+            Assert.That(controller.CurrentPageIndex, Is.EqualTo(0));
+            Assert.That(controller.HasNextPage, Is.True);
+
+            controller.Next();
+
+            Assert.That(controller.CurrentPageIndex, Is.EqualTo(1));
+            Assert.That(controller.CurrentDialogueText, Is.EqualTo("Second."));
+            Assert.That(controller.HasNextPage, Is.False);
+            Assert.That(pageChangeCount, Is.EqualTo(1));
+
+            controller.Next();
+
+            Assert.That(controller.IsDialogueOpen, Is.False);
+            Assert.That(controller.PageCount, Is.EqualTo(0));
+            Object.DestroyImmediate(gameObject);
+        }
     }
 }

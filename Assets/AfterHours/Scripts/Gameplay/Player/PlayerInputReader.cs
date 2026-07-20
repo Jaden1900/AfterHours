@@ -28,6 +28,9 @@ namespace AfterHours.Gameplay.Player
 
         public Vector2 MoveInput { get; private set; }
         public Vector2 LookInput { get; private set; }
+        public string InteractionBindingDisplayName => _interactAction == null
+            ? string.Empty
+            : _interactAction.GetBindingDisplayString();
 
         private void Awake()
         {
