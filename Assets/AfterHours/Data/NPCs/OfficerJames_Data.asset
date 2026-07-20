@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30301d717fbc9ad449200fa32cdca267, type: 3}
+  m_Name: OfficerJames_Data
+  m_EditorClassIdentifier: Assembly-CSharp::AfterHours.Gameplay.NPCs.NPCData
+  _npcId: officer_james
+  _displayName: Officer James
+  _initialDialogueText: 'Thanks for coming.
+
+
+    A man named Daniel Carter disappeared
+    from Room 6 about an hour ago.
+
+
+    There''s no sign of a struggle. No body.
+    Just people who aren''t telling the whole truth.
+
+
+    I need you to start with
+    the receptionist. She was the last person to see him alive.'
+  _interactionPrompt: 
